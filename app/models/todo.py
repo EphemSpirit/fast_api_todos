@@ -1,0 +1,11 @@
+from app.extensions import Base
+from sqlalchemy import String, Integer, Boolean
+from sqlalchemy.orm import Mapped, mapped_column
+
+class Todos(Base):
+    __tablename__ = "todos"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    title: Mapped[str] = mapped_column(String(50))
+    description: Mapped[str] = mapped_column(String(250))
+    priority: Mapped[int] = mapped_column(Integer)
+    complete: Mapped[bool] = mapped_column(Boolean, default=False)
