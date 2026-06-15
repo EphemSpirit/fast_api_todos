@@ -1,5 +1,5 @@
 from app.extensions import Base
-from sqlalchemy import String, Integer, Boolean
+from sqlalchemy import String, Integer, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Todos(Base):
@@ -9,3 +9,4 @@ class Todos(Base):
     description: Mapped[str] = mapped_column(String(250))
     priority: Mapped[int] = mapped_column(Integer)
     complete: Mapped[bool] = mapped_column(Boolean, default=False)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
