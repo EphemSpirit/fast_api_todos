@@ -1,10 +1,12 @@
-from fastapi import Depends, APIRouter
+from fastapi import APIRouter
+from pydantic import BaseModel
 from app.extensions import get_db
-from typing import Annotated
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm
 from app.utils.auth_utils import *
+from datetime import timedelta
+from starlette import status
 
 router = APIRouter(
     prefix="/auth",
@@ -12,8 +14,13 @@ router = APIRouter(
 )
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
-@router.post("/token")
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+@router.post("/token", response_model=Token)
 async def get_access_token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         db: Annotated[Session, Depends(get_db)]
@@ -26,8 +33,10 @@ async def get_access_token(
     )
 
     if not user:
-        return 'Failed Authentication'
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
 
-    return 'Successful authentication'
+    token = create_access_token(username=user.username, user_id=user.id, expires_delta=timedelta(minutes=20))
+
+    return {"access_token": token, "token_type": "Bearer"}
 
 
