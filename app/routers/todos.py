@@ -3,8 +3,8 @@ from starlette import status
 from app.extensions import get_db
 from typing import Annotated
 from sqlalchemy.orm import Session
-from app.models import *
-from app.schemas import *
+from app.models import Todos
+from app.schemas import TodoRequest
 
 router = APIRouter(
     prefix="/todos",

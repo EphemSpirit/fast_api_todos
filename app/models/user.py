@@ -9,6 +9,6 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(25), unique=True)
     first_name: Mapped[str] = mapped_column(String)
     last_name: Mapped[str] = mapped_column(String)
-    password: Mapped[str] = mapped_column(String)
+    hashed_password: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     role: Mapped[str] = mapped_column(String)
