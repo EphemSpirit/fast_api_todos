@@ -35,6 +35,6 @@ async def delete_todo(
 
     if todo is None:
         raise HTTPException(status_code=404, detail="Todo not found.")
-    
+
     db.delete(todo)
     db.commit()
