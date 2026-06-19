@@ -34,7 +34,7 @@ async def get_access_token(
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
 
-    token = create_access_token(username=user.username, user_id=user.id, expires_delta=timedelta(minutes=20))
+    token = create_access_token(username=user.username, user_id=user.id, role=user.role, expires_delta=timedelta(minutes=20))
 
     return {"access_token": token, "token_type": "Bearer"}
 
