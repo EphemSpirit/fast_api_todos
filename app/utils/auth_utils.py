@@ -8,6 +8,8 @@ from app.models import User
 from jose import jwt, JWTError
 import os
 
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
+
 def authenticate_user(username: str, password: str, db, context):
     user = db.query(User).filter(User.username == username).first()
 
@@ -29,7 +31,7 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta):
     encode.update({"exp": expires})
     return jwt.encode(encode, os.getenv("APP_SECRET_KEY"), algorithm="HS256")
 
-async def get_current_user(token: Annotated[str, Depends(OAuth2PasswordBearer)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload = jwt.decode(token, os.getenv("APP_SECRET_KEY"), algorithms=["HS256"])
         username: str = payload.get("sub")
