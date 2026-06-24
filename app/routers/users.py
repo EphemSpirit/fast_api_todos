@@ -30,7 +30,8 @@ async def create_user(db: Annotated[Session, Depends(get_db)], create_user_reque
         last_name=create_user_request.last_name,
         role=create_user_request.role,
         hashed_password=bcrypt_context.hash(create_user_request.password),
-        is_active=True
+        is_active=True,
+        phone_number=create_user_request.phone_number
     )
 
     db.add(new_user)
@@ -66,3 +67,20 @@ async def reset_password(
 
     db.add(user_model)
     db.commit()
+
+
+@router.put("/update_phone_number/{phone_number}", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(
+        user: Annotated[dict, Depends(get_current_user)],
+        db: Annotated[Session, Depends(get_db)],
+        phone_number: str
+):
+    if user is None:
+        raise HTTPException(status_code=401, detail="Authentication Failed.")
+
+    user_model = db.query(User).filter(User.id == user.get("id")).first()
+
+    user_model.phone_number=phone_number
+    db.add(user_model)
+    db.commit()
+
