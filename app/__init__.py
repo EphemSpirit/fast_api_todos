@@ -9,6 +9,10 @@ load_dotenv()
 def create_app():
     app = FastAPI()
 
+    @app.get("/healthy")
+    def health_check():
+        return {"status": "healthy"}
+
     for router in routers:
         app.include_router(router)
 
