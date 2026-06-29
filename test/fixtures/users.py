@@ -10,10 +10,10 @@ def test_user():
     user = User(
         first_name="Test",
         last_name="User",
-        email="testemail.website.com",
+        email="testemail@website.com",
         username="test1234",
         is_active=True,
-        role="",
+        role="admin",
         phone_number="123456789",
         hashed_password=bcrypt_context.hash("testpassword")
     )
