@@ -1,8 +1,7 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-from app.extensions import Base, get_db
-from app.utils.auth_utils import get_current_user
+from app.extensions import Base
 from main import app
 from fastapi.testclient import TestClient
 import os
@@ -28,8 +27,5 @@ def override_get_db():
 
 def override_get_current_user():
     return {"username": "drewhundtest", "id": 1, "role": "admin"}
-
-app.dependency_overrides[get_db] = override_get_db
-app.dependency_overrides[get_current_user] = override_get_current_user
 
 client = TestClient(app)

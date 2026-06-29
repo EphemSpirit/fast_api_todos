@@ -1,26 +1,15 @@
-from sqlalchemy import text
 from fastapi import status
-import pytest
+
+from app.extensions import get_db
+from app.utils.auth_utils import get_current_user
+from test.fixtures.todos import test_todo
 from app.models import Todos
-from test.test_database import client, TestingSessionLocal, engine
+from test.utils import *
 
-@pytest.fixture
-def test_todo():
-    todo = Todos(
-        title="Learn to code",
-        description="Study every day",
-        priority=5,
-        complete=False,
-        owner_id=1
-    )
+app.dependency_overrides[get_db] = override_get_db
+app.dependency_overrides[get_current_user] = override_get_current_user
 
-    db = TestingSessionLocal()
-    db.add(todo)
-    db.commit()
-    yield todo
-    with engine.connect() as connection:
-        connection.execute(text("DELETE FROM todos;"))
-        connection.commit()
+
 
 def test_read_all_authenticated(test_todo: Todos):
     response = client.get("/todos")
